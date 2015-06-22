@@ -1,5 +1,6 @@
 package com.kim;
 
+import com.kim.parser.DatePatternParser;
 import com.kim.parser.LevelPatternParser;
 import com.kim.parser.LiteralPatternParser;
 import com.kim.parser.LogEvent;
@@ -12,6 +13,7 @@ import org.apache.log4j.pattern.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -144,6 +146,10 @@ org.apache.log4j.pattern.LineSeparatorPatternConverter@108c4c35*/
               String literal = (String) FieldUtils.getField(LiteralPatternConverter.class, "literal", true).get(converter);
               line = LiteralPatternParser.get(literal).parse(line, logEvent);
             }
+//            else if (converter instanceof DatePatternConverter) {
+//              DateFormat dateFormat = (DateFormat) FieldUtils.getField(DatePatternConverter.class, "dateFormat", true).get(converter);
+//              line = DatePatternParser.get(dateFormat).parse(line, logEvent);
+//            }
             else {
               line = "";
             }

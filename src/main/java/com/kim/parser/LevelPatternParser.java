@@ -1,5 +1,6 @@
 package com.kim.parser;
 
+import com.kim.parser.LogEventItem.LogEventItemBuilder;
 import org.apache.log4j.Level;
 
 /**
@@ -10,25 +11,32 @@ public class LevelPatternParser implements Log4JParser {
   private static final Log4JParser instance = new LevelPatternParser();
 
   public String parse(String logLine, LogEvent logEvent) {
+    Level level = null;
     if (logLine.startsWith(Level.ERROR.toString())) {
       logLine = logLine.substring(Level.ERROR.toString().length());
-      logEvent.setLevel(Level.ERROR);
+      level = Level.ERROR;
     }
     else if (logLine.startsWith(Level.DEBUG.toString())) {
       logLine = logLine.substring(Level.DEBUG.toString().length());
-      logEvent.setLevel(Level.DEBUG);
+      level = Level.DEBUG;
     }
     else if (logLine.startsWith(Level.INFO.toString())) {
       logLine = logLine.substring(Level.INFO.toString().length());
-      logEvent.setLevel(Level.INFO);
+      level = Level.INFO;
     }
     else if (logLine.startsWith(Level.TRACE.toString())) {
       logLine = logLine.substring(Level.TRACE.toString().length());
-      logEvent.setLevel(Level.TRACE);
+      level = Level.TRACE;
     }
     else if (logLine.startsWith(Level.WARN.toString())) {
       logLine = logLine.substring(Level.WARN.toString().length());
-      logEvent.setLevel(Level.WARN);
+      level = Level.WARN;
+    }
+
+    if (level != null) {
+      logEvent.getItems().add(LogEventItemBuilder.logEventItem()
+        .withTypeName("Level")
+        .withInstance(level).build());
     }
     return logLine;
   }

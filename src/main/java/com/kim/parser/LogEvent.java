@@ -2,35 +2,27 @@ package com.kim.parser;
 
 import org.apache.log4j.Level;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Created by phuonghqh on 6/22/15.
  */
 public class LogEvent {
 
-  private Level level;
+  private List<LogEventItem> items = new ArrayList<>();
 
-  private String literal;
-
-  public String getLiteral() {
-    return literal;
+  public List<LogEventItem> getItems() {
+    return items;
   }
 
-  public void setLiteral(String literal) {
-    this.literal = literal;
+  public void setItems(List<LogEventItem> items) {
+    this.items = items;
   }
 
-  public Level getLevel() {
-    return level;
-  }
-
-  public void setLevel(Level level) {
-    this.level = level;
-  }
-
+  @Override
   public String toString() {
-    return "LogEvent{" +
-      "level=" + level +
-      ", literal='" + literal + '\'' +
-      '}';
+    return items.toString();
   }
 }
