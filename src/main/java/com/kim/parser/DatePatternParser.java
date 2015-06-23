@@ -17,12 +17,9 @@ public class DatePatternParser implements Log4JParser {
   private DateFormat dateFormat;
 
   public String parse(String logLine, LogEvent logEvent) {
-    int end = 0;
-    Date date = null;
-    boolean beginValid = false;
     int lastParseIndex = -1;
+    Date date = null;
     for (int i = 1; i < logLine.length(); i++) {
-      date = null;
       String dateStr = logLine.substring(0, i);
       try {
         ParsePosition position = new ParsePosition(0);

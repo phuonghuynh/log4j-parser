@@ -17,6 +17,7 @@ public class RelativeTimePatternParser implements Log4JParser {
     int end = 0;
     Long value = null;
     for (int i = 1; i < logLine.length(); i++) {
+      value = null;
       String str = logLine.substring(0, i);
       try {
         value = Long.parseLong(str);
@@ -29,9 +30,9 @@ public class RelativeTimePatternParser implements Log4JParser {
       }
     }
     if (end > 0) {
-      logLine = logLine.substring(end);
       logEvent.getItems().add(LogEventItem.LogEventItemBuilder.logEventItem()
-        .withTypeName("RelativeTime").withInstance(value).build());
+        .withTypeName("RelativeTime").withInstance(Long.parseLong(logLine.substring(0, end))).build());
+      logLine = logLine.substring(end);
     }
     return logLine;
   }
