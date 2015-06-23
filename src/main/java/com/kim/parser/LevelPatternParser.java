@@ -1,6 +1,7 @@
 package com.kim.parser;
 
-import com.kim.parser.LogEventItem.LogEventItemBuilder;
+import com.kim.parser.model.LogEvent;
+import com.kim.parser.model.LogEventItem.LogEventItemBuilder;
 import org.apache.log4j.Level;
 
 /**

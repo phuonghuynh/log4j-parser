@@ -1,10 +1,7 @@
-package com.kim.parser;
-
-import org.apache.log4j.Level;
+package com.kim.parser.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by phuonghqh on 6/22/15.
@@ -21,7 +18,6 @@ public class LogEvent {
     this.items = items;
   }
 
-  @Override
   public String toString() {
     return items.toString();
   }

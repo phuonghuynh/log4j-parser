@@ -1,8 +1,10 @@
 package com.kim.parser;
 
-import org.apache.log4j.pattern.DatePatternConverter;
+import com.kim.parser.model.LogEvent;
+import com.kim.parser.model.LogEventItem;
 
 import java.text.DateFormat;
+import java.text.ParsePosition;
 import java.util.Date;
 
 /**
@@ -16,24 +18,33 @@ public class DatePatternParser implements Log4JParser {
 
   public String parse(String logLine, LogEvent logEvent) {
     int end = 0;
+    Date date = null;
+    boolean beginValid = false;
+    int lastParseIndex = -1;
     for (int i = 1; i < logLine.length(); i++) {
+      date = null;
       String dateStr = logLine.substring(0, i);
-      Date date = null;
       try {
-        date = dateFormat.parse(dateStr);
+        ParsePosition position = new ParsePosition(0);
+        date = dateFormat.parse(dateStr, position);
+        if (position.getErrorIndex() == -1) {
+          if (lastParseIndex != position.getIndex()) {
+            lastParseIndex = position.getIndex();
+          }
+          else {
+            break;
+          }
+        }
       }
       catch (Exception e) {
       }
-      if (date != null) {
-        end = i;
-        break;
-      }
     }
-    if (end > 0) {
-      logLine = logLine.substring(0, end);
-
+    if (lastParseIndex > 0) {
+      logLine = logLine.substring(lastParseIndex);
+      logEvent.getItems().add(LogEventItem.LogEventItemBuilder.logEventItem()
+        .withTypeName("Date").withInstance(date).build());
     }
-    return null;
+    return logLine;
   }
 
   public static DatePatternParser get(DateFormat dateFormat) {

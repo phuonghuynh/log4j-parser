@@ -1,5 +1,7 @@
 package com.kim.parser;
 
+import com.kim.parser.model.LogEvent;
+
 /**
  * Created by phuonghqh on 6/22/15.
  */

@@ -1,4 +1,4 @@
-package com.kim.parser;
+package com.kim.parser.model;
 
 /**
  * Created by phuonghqh on 6/22/15.

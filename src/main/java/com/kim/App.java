@@ -3,7 +3,8 @@ package com.kim;
 import com.kim.parser.DatePatternParser;
 import com.kim.parser.LevelPatternParser;
 import com.kim.parser.LiteralPatternParser;
-import com.kim.parser.LogEvent;
+import com.kim.parser.RelativeTimePatternParser;
+import com.kim.parser.model.LogEvent;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -13,7 +14,6 @@ import org.apache.log4j.pattern.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -29,7 +29,7 @@ public class App {
   private static String patternLayout = "%p %d{ISO8601} %r %c [%t] %m%n";//%r [%t] %p %c %x - %m%n
 
   public static void sampleLogEntries() {
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 1; i++) {
       LOG.error("example " + i);
       LOG.info("example " + i);
       LOG.debug("example " + i);
@@ -102,7 +102,6 @@ public class App {
   }
 
   public static void main(String[] args) throws IOException, IllegalAccessException {
-//    Main.main(args);
 //    sampleLogEntries();
     String input = OptionConverter.convertSpecialChars(patternLayout);
     List converters = new ArrayList();
@@ -111,7 +110,7 @@ public class App {
     PatternParser.parse(input, converters, fields, converterRegistry, PatternParser.getPatternLayoutRules());
 
 
-    for (Object c : converters) {
+//    for (Object c : converters) {
 //      LoggingEventPatternConverter converter = (LoggingEventPatternConverter) c;
 //      System.out.println(converter);
       /*org.apache.log4j.pattern.LevelPatternConverter@6d5380c2
@@ -126,13 +125,13 @@ org.apache.log4j.pattern.ThreadPatternConverter@77a567e1
 org.apache.log4j.pattern.LiteralPatternConverter@736e9adb
 org.apache.log4j.pattern.MessagePatternConverter@6d21714c
 org.apache.log4j.pattern.LineSeparatorPatternConverter@108c4c35*/
-    }
+//    }
 
     Files.lines(Paths.get("log4j-parser.log")).forEach(logLine -> {
 
       try {
         String line = logLine;
-        com.kim.parser.LogEvent logEvent = new LogEvent();
+        LogEvent logEvent = new LogEvent();
         while (line.length() > 0) {
           for (Object converter : converters) {
             if (line.length() == 0) {
@@ -146,10 +145,15 @@ org.apache.log4j.pattern.LineSeparatorPatternConverter@108c4c35*/
               String literal = (String) FieldUtils.getField(LiteralPatternConverter.class, "literal", true).get(converter);
               line = LiteralPatternParser.get(literal).parse(line, logEvent);
             }
-//            else if (converter instanceof DatePatternConverter) {
-//              DateFormat dateFormat = (DateFormat) FieldUtils.getField(DatePatternConverter.class, "dateFormat", true).get(converter);
+            else if (converter instanceof DatePatternConverter) {
+              CachedDateFormat dateFormat = (CachedDateFormat) FieldUtils.getField(DatePatternConverter.class, "df", true).get(converter);
+              line = DatePatternParser.get(dateFormat).parse(line, logEvent);
+            }
+            else if (converter instanceof RelativeTimePatternConverter) {
+//              CachedDateFormat dateFormat = (CachedDateFormat) FieldUtils.getField(DatePatternConverter.class, "df", true).get(converter);
 //              line = DatePatternParser.get(dateFormat).parse(line, logEvent);
-//            }
+              line = RelativeTimePatternParser.get().parse(line, logEvent);
+            }
             else {
               line = "";
             }
